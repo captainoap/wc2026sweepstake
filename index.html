@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup 2026 Sweepstake</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9962A;
+    --gold-light: #F0C86A;
+    --pitch: #1a5c2a;
+    --pitch-dark: #0e3318;
+    --pitch-mid: #236b32;
+    --white: #f8f6f0;
+    --off: #e8e3d8;
+    --text: #1a1a1a;
+    --muted: #5a5a5a;
+    --red: #c0392b;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    font-family: 
+      'DM Sans',
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      "Noto Sans",
+      "Apple Color Emoji",
+      "Segoe UI Emoji",
+      "Noto Color Emoji",
+      sans-serif; 
+  
+    background: var(--pitch-dark); 
+    color: var(--white); 
+    min-height: 100vh; 
+    overflow-x: hidden; 
+  }
+
+  <!-- body { -->
+    <!-- font-family: 'DM Sans', sans-serif; -->
+    <!-- background: var(--pitch-dark); -->
+    <!-- color: var(--white); -->
+    <!-- min-height: 100vh; -->
+    <!-- overflow-x: hidden; -->
+  <!-- } -->
+
+  .pitch-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background: repeating-linear-gradient(
+      180deg,
+      var(--pitch-dark) 0px, var(--pitch-dark) 60px,
+      var(--pitch) 60px, var(--pitch) 120px
+    );
+    opacity: 0.35;
+  }
+
+  .container {
+    position: relative; z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 3rem;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    text-align: center;
+    padding: 0.75rem 0 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  .header-trophy { font-size: 1.8rem; }
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    letter-spacing: 0.08em;
+    color: var(--gold-light);
+    line-height: 1;
+    text-shadow: 0 2px 20px rgba(201,150,42,0.4);
+  }
+  .header h1 span {
+    color: var(--white);
+    font-size: 0.55em;
+    letter-spacing: 0.3em;
+    margin-right: 0.4em;
+  }
+
+  /* Draw-mode: shrink header even further */
+  .draw-mode .header { padding: 0.3rem 0; }
+  .draw-mode .header h1 { font-size: clamp(1.1rem, 2.5vw, 1.6rem); }
+  .draw-mode .header-trophy { font-size: 1.2rem; }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; animation: fadeIn 0.4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== SETUP SCREEN ===== */
+  .setup-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 1.75rem;
+    margin-top: 0.75rem;
+  }
+  .setup-card h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.08em;
+    color: var(--gold-light);
+    margin-bottom: 1.25rem;
+  }
+
+  .pot-selector { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .pot-btn {
+    flex: 1; min-width: 100px;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .pot-btn:hover { border-color: var(--gold); background: rgba(201,150,42,0.1); }
+  .pot-btn.selected { border-color: var(--gold-light); background: rgba(201,150,42,0.2); color: var(--gold-light); }
+  .pot-btn strong { display: block; font-size: 1.4rem; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; }
+
+  .pot-info {
+    background: rgba(201,150,42,0.1);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 0.65rem 1rem;
+    font-size: 0.82rem;
+    color: var(--gold-light);
+    margin-bottom: 1.5rem;
+    display: none;
+  }
+  .pot-info.visible { display: block; }
+
+  .section-label {
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.65rem;
+  }
+
+  .names-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 7px;
+    margin-bottom: 0.4rem;
+  }
+  .name-input {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    transition: border-color 0.2s; outline: none;
+  }
+  .name-input:focus { border-color: var(--gold); }
+  .name-input::placeholder { color: rgba(255,255,255,0.3); }
+  .name-input.error { border-color: var(--red); }
+
+  .names-note { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; }
+
+  .error-msg { color: #ff7b7b; font-size: 0.85rem; margin-bottom: 1rem; display: none; }
+  .error-msg.visible { display: block; }
+
+  .btn-start {
+    width: 100%; padding: 0.9rem;
+    background: var(--gold); border: none; border-radius: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; letter-spacing: 0.1em;
+    color: var(--pitch-dark); cursor: pointer; transition: all 0.2s;
+    margin-top: 0.5rem;
+  }
+  .btn-start:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-start:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ===== POT PREVIEW SCREEN ===== */
+  .pot-preview-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin-top: 0.75rem;
+  }
+  .pot-preview-card h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 0.08em;
+    color: var(--gold-light); margin-bottom: 0.4rem;
+  }
+  .pot-preview-subtitle {
+    font-size: 0.82rem; color: rgba(255,255,255,0.5); margin-bottom: 1.25rem;
+  }
+  .pots-columns {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+  .pot-col {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 0.85rem;
+  }
+  .pot-col-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 0.1em;
+    color: var(--gold); margin-bottom: 0.65rem;
+  }
+  .pot-teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 5px;
+  }
+  .team-chip {
+    background: rgba(201,150,42,0.12);
+    border: 1px solid rgba(201,150,42,0.25);
+    border-radius: 6px;
+    padding: 8px 4px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.82rem; letter-spacing: 0.05em;
+    color: var(--gold-light);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: grab;
+    user-select: none;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  }
+  .team-chip:active { cursor: grabbing; }
+  .team-chip.dragging { opacity: 0.4; transform: scale(0.95); }
+  .chip-name {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.82rem;
+    color: var(--gold-light);
+    line-height: 1.2;
+  }
+  .chip-tag {
+    display: block;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    color: var(--gold-light);
+  }
+  .team-chip.drag-over { background: rgba(201,150,42,0.35); border-color: var(--gold-light); transform: scale(1.05); }
+
+  .btn-begin-draw {
+    width: 100%; padding: 0.9rem;
+    background: var(--gold); border: none; border-radius: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; letter-spacing: 0.1em;
+    color: var(--pitch-dark); cursor: pointer; transition: all 0.2s;
+  }
+  .btn-begin-draw:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* ===== REVEAL SCREEN ===== */
+  .reveal-header {
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+  .reveal-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; letter-spacing: 0.1em;
+    color: var(--gold-light);
+  }
+  .reveal-header p { color: rgba(255,255,255,0.55); font-size: 0.82rem; margin-top: 0.2rem; }
+
+  .progress-bar-wrap {
+    width: 100%; height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px; margin-bottom: 0.4rem; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: var(--gold);
+    border-radius: 2px; width: 0%; transition: width 0.4s ease;
+  }
+  .reveal-progress {
+    text-align: center; margin-bottom: 0.75rem;
+    color: rgba(255,255,255,0.4); font-size: 0.8rem;
+  }
+
+  /* Countdown overlay */
+  .countdown-overlay {
+    text-align: center;
+    padding: 2rem 0;
+  }
+  .countdown-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 7rem;
+    color: var(--gold-light);
+    text-shadow: 0 0 40px rgba(240,200,106,0.5);
+    animation: countPulse 1s ease-in-out infinite;
+    display: block;
+  }
+  @keyframes countPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  .countdown-label {
+    font-size: 0.9rem; color: rgba(255,255,255,0.5);
+    letter-spacing: 0.15em; text-transform: uppercase;
+    margin-top: 0.5rem;
+  }
+
+  /* Reveal rows — dynamic sizing */
+  .reveal-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+	max-width: 300px;
+	margin: 0 auto;
+  }
+  .reveal-list.two-col { grid-template-columns: 1fr 1fr; max-width: 600px; margin: 0 auto; }
+
+  .reveal-row {
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 0.1rem 0.6rem;
+	line-height: 0.8;
+    opacity: 0; transform: translateX(-12px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .reveal-row.show { opacity: 1; transform: translateX(0); }
+
+  .reveal-name { font-weight: 500; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .reveal-arrow { color: rgba(255,255,255,0.25); font-size: 0.8rem; flex-shrink: 0; }
+  .reveal-team {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.95rem; letter-spacing: 0.08em;
+    color: var(--gold-light); flex-shrink: 0;
+  }
+
+  .btn-next-phase {
+    display: none;
+    width: 100%; padding: 0.8rem;
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    border-radius: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem; letter-spacing: 0.1em;
+    color: var(--gold-light); cursor: pointer;
+    margin-top: 0.9rem; transition: all 0.2s;
+  }
+  .btn-next-phase.visible { display: block; }
+  .btn-next-phase:hover { background: rgba(201,150,42,0.15); }
+
+  /* ===== RESULTS SCREEN ===== */
+  .results-header {
+    text-align: center; margin-bottom: 1.25rem;
+  }
+  .results-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 0.08em;
+    color: var(--gold-light);
+  }
+  .results-header p { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-top: 0.3rem; }
+
+  /* Results card grid */
+  .results-grid {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .result-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    transition: background 0.2s;
+  }
+  .result-card:hover { background: rgba(255,255,255,0.08); }
+  .result-card-name {
+    font-weight: 600; font-size: 0.9rem;
+    color: var(--white);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 0.4rem; margin-bottom: 0.4rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .result-card-teams {
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .result-team-row {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .result-pot-badge {
+    font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    background: rgba(201,150,42,0.18);
+    color: var(--gold);
+    border-radius: 3px; padding: 1px 5px;
+    flex-shrink: 0;
+  }
+  .result-team-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.95rem; letter-spacing: 0.06em;
+    color: var(--gold-light);
+  }
+
+  .btn-restart {
+    display: block; margin: 0 auto;
+    padding: 0.75rem 2rem;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.2s;
+  }
+  .btn-restart:hover { border-color: rgba(255,255,255,0.5); color: var(--white); }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed; border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none; z-index: 999;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 500px) {
+    .names-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="pitch-bg"></div>
+<div class="container" id="main-container">
+
+  <div class="header">
+    <span class="header-trophy">🏆</span>
+    <h1><span>FIFA</span>World Cup 2026 Sweepstake</h1>
+  </div>
+
+  <!-- SETUP SCREEN -->
+  <div id="screen-setup" class="screen active">
+    <div class="setup-card">
+      <h2>Set Up the Draw</h2>
+
+      <div class="section-label">Number of pots</div>
+      <div class="pot-selector">
+        <button class="pot-btn" data-pots="2" onclick="selectPots(2)">
+          <strong>2</strong> Pots · 24 people
+        </button>
+        <button class="pot-btn" data-pots="3" onclick="selectPots(3)">
+          <strong>3</strong> Pots · 16 people
+        </button>
+        <button class="pot-btn" data-pots="4" onclick="selectPots(4)">
+          <strong>4</strong> Pots · 12 people
+        </button>
+      </div>
+      <div class="pot-info" id="pot-info"></div>
+
+      <div class="section-label" id="participants-label">Participants — select pots first</div>
+      <div class="names-grid" id="names-grid"></div>
+      <p class="names-note" id="names-note"></p>
+
+      <p class="error-msg" id="error-msg"></p>
+      <button class="btn-start" id="btn-start" onclick="goToPotPreview()" disabled>Review Pots &amp; Begin</button>
+    </div>
+  </div>
+
+  <!-- POT PREVIEW SCREEN -->
+  <div id="screen-pot-preview" class="screen">
+    <div class="pot-preview-card">
+      <h2>Review &amp; Adjust Pots</h2>
+      <p class="pot-preview-subtitle">Drag teams between pots to adjust — swaps keep pot sizes equal</p>
+      <div class="pots-columns" id="pots-columns"></div>
+      <button class="btn-begin-draw" onclick="startDraw()">▶ Begin the Draw</button>
+    </div>
+  </div>
+
+  <!-- REVEAL SCREEN -->
+  <div id="screen-reveal" class="screen">
+    <div class="reveal-header">
+      <h2 id="reveal-title">Drawing Pot 1…</h2>
+      <p id="reveal-subtitle"></p>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
+    <div class="reveal-progress" id="reveal-progress"></div>
+    <div id="reveal-content"></div>
+    <button class="btn-next-phase" id="btn-next" onclick="nextPhase()">Draw Next Pot →</button>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="screen-results" class="screen">
+    <div class="results-header">
+      <h2>🏆 Final Draw Results</h2>
+      <p id="results-subtitle"></p>
+    </div>
+    <div class="results-grid" id="results-grid"></div>
+    <button class="btn-restart" onclick="restart()">↺ New Draw</button>
+  </div>
+
+</div>
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const GROUPS_12 = {
+  A: ['Mexico','South Korea','Czechia','South Africa'],
+  B: ['Switzerland','Canada','Bosnia','Qatar'],
+  C: ['Brazil','Morocco','Scotland','Haiti'],
+  D: ['United States','Turkey','Paraguay','Australia'],
+  E: ['Germany','Ecuador','Ivory Coast','Curaçao'],
+  F: ['Netherlands','Japan','Sweden','Tunisia'],
+  G: ['Belgium','Egypt','Iran','New Zealand'],
+  H: ['Spain','Uruguay','Saudi Arabia','Cape Verde'],
+  I: ['France','Norway','Senegal','Iraq'],
+  J: ['Argentina','Austria','Algeria','Jordan'],
+  K: ['Portugal','Colombia','DR Congo','Uzbekistan'],
+  L: ['England','Croatia','Ghana','Panama']
+};
+// Tag lookup: team name → e.g. "A1", "L4"
+const TEAM_TAG = {};
+Object.entries(GROUPS_12).forEach(([grp, teams]) =>
+  teams.forEach((t, i) => TEAM_TAG[t] = `${grp}${i + 1}`)
+);
+
+function teamTag(t) { return TEAM_TAG[t] || '?'; }
+function sameGroup(t1, t2) { return teamTag(t1)[0] === teamTag(t2)[0]; }
+
+const TEAM_FLAG = {
+  'Mexico':'MX','South Africa':'ZA','South Korea':'KR','Czechia':'CZ',
+  'Canada':'CA','Bosnia':'BA','Qatar':'QA','Switzerland':'CH',
+  'Brazil':'BR','Morocco':'MA','Haiti':'HT','Scotland':'GB-SCT',
+  'United States':'US','Paraguay':'PY','Australia':'AU','Turkey':'TR',
+  'Germany':'DE','Curaçao':'CW','Ivory Coast':'CI','Ecuador':'EC',
+  'Netherlands':'NL','Japan':'JP','Sweden':'SE','Tunisia':'TN',
+  'Belgium':'BE','Egypt':'EG','Iran':'IR','New Zealand':'NZ',
+  'Spain':'ES','Cape Verde':'CV','Saudi Arabia':'SA','Uruguay':'UY',
+  'France':'FR','Senegal':'SN','Iraq':'IQ','Norway':'NO',
+  'Argentina':'AR','Algeria':'DZ','Austria':'AT','Jordan':'JO',
+  'Portugal':'PT','DR Congo':'CD','Uzbekistan':'UZ','Colombia':'CO',
+  'England':'GB-ENG','Croatia':'HR','Ghana':'GH','Panama':'PA'
+};
+
+function flagImg(team, height) {
+  const code = TEAM_FLAG[team];
+  if (!code) return '';
+  const w = Math.round(height * 1.5);
+  return `<img src="https://raw.githubusercontent.com/catamphetamine/country-flag-icons/master/flags/3x2/${code}.svg" style="height:${height}px;width:${w}px;object-fit:cover;border-radius:2px;vertical-align:middle;flex-shrink:0" alt="${team}">`;
+}
+
+const POT_INFO = {
+  2: '[DEFAULT SORTING] Pot 1: 1st & 2nd from each group ·  Pot 2: 3rd & 4th from each group',
+  3: '[DEFAULT SORTING] Pot 1: 1st team from each group + 2nd team from groups A-D ·  Pot 2: Remaining 2nd teams + 3rd team from groups A-H  ·  Pot 3: Remaining teams',
+  4: '[DEFAULT SORTING] Pot 1: 1st from each group  ·  Pot 2: 2nd from each group ·  Pot 3: 3rd from each group  ·  Pot 4: 4th from each group'
+};
+
+const PEOPLE_COUNT = { 2: 24, 3: 16, 4: 12 };
+
+// ============================================================
+// STATE
+// ============================================================
+let selectedPots = 0;
+let slotCount = 0;
+let drawResult = [];
+let revealPhase = 0;
+let editablePots = []; // Array of arrays, mutable after preview
+
+// ============================================================
+// UTILITY
+// ============================================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Build default pots based on numPots selection
+function buildDefaultPots(numPots) {
+  const groups = Object.values(GROUPS_12);
+  if (numPots === 2) {
+    // Pot1: positions 0,1 of each group; Pot2: positions 2,3
+    return [
+      groups.flatMap(g => [g[0], g[1]]),
+      groups.flatMap(g => [g[2], g[3]])
+    ];
+  } else if (numPots === 3) {
+	const pot1 = [
+		'Spain','France','England','Portugal','Argentina','Brazil','Germany','Netherlands',
+		'Norway','Belgium','Colombia','Morocco','Japan','Mexico','Switzerland','United States'
+	];
+	const pot2 = [
+		'Uruguay','Turkey','Ecuador','Croatia','Senegal','Austria','Sweden','Canada',
+		'Scotland','Ivory Coast','Paraguay','South Korea','Australia','Algeria','Egypt','Czechia'
+	];
+	const pot3 = [
+		'Bosnia','Ghana','Tunisia','Iran','DR Congo','South Africa','Saudi Arabia','Panama',
+		'Uzbekistan','Qatar','Iraq','Cape Verde','Jordan','New Zealand','Haiti','Curaçao'
+	];
+	return [pot1, pot2, pot3];
+  } else { // 4 pots
+    return [
+      groups.map(g => g[0]),
+      groups.map(g => g[1]),
+      groups.map(g => g[2]),
+      groups.map(g => g[3])
+    ];
+  }
+}
+
+// Assign teams from (already-ordered) pots to names, resolving same-group conflicts
+function assignTeams(names, pots) {
+  const shuffled = pots.map(p => shuffle([...p]));
+  const n = names.length;
+  const numPots = pots.length;
+
+  const assignments = Array.from({length: n}, () => []);
+
+  for (let pi = 0; pi < numPots; pi++) {
+    const pool = shuffled[pi].slice(0, n);
+    for (let i = 0; i < n; i++) assignments[i][pi] = pool[i];
+
+    // Resolve same-group conflicts
+    for (let i = 0; i < n; i++) {
+      for (let prevPot = 0; prevPot < pi; prevPot++) {
+        if (sameGroup(assignments[i][pi], assignments[i][prevPot])) {
+          for (let j = i + 1; j < n; j++) {
+            const candidate = assignments[j][pi];
+            let ok = true;
+            for (let pp = 0; pp < pi; pp++) {
+              if (sameGroup(candidate, assignments[i][pp])) { ok = false; break; }
+            }
+            if (!ok) continue;
+            let jOk = true;
+            for (let pp = 0; pp < pi; pp++) {
+              if (sameGroup(assignments[i][pi], assignments[j][pp])) { jOk = false; break; }
+            }
+            if (jOk) {
+              [assignments[i][pi], assignments[j][pi]] = [assignments[j][pi], assignments[i][pi]];
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  return names.map((name, i) => ({ name, teams: assignments[i] }));
+}
+
+// ============================================================
+// SETUP SCREEN
+// ============================================================
+function selectPots(n) {
+  selectedPots = n;
+  document.querySelectorAll('.pot-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.pots) === n));
+  const info = document.getElementById('pot-info');
+  info.textContent = POT_INFO[n];
+  info.classList.add('visible');
+
+  const count = PEOPLE_COUNT[n];
+  slotCount = count;
+  buildSlots(count);
+
+  document.getElementById('participants-label').textContent = `Participants (exactly ${count} required)`;
+  document.getElementById('names-note').textContent =
+    `Fill all ${count} slots — ${n} pot${n>1?'s':''} × ${48/count} teams each = one team per pot per person.`;
+
+  checkCanStart();
+}
+
+function buildSlots(n) {
+  const grid = document.getElementById('names-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'name-input';
+    inp.placeholder = `Person ${i+1}`;
+    inp.maxLength = 30;
+    inp.addEventListener('input', checkCanStart);
+    grid.appendChild(inp);
+  }
+}
+
+function checkCanStart() {
+  if (!selectedPots) { document.getElementById('btn-start').disabled = true; return; }
+  const inputs = document.querySelectorAll('#names-grid .name-input');
+  const filled = [...inputs].filter(i => i.value.trim()).length;
+  document.getElementById('btn-start').disabled = filled < slotCount;
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+
+// ============================================================
+// POT PREVIEW SCREEN
+// ============================================================
+function goToPotPreview() {
+  const errEl = document.getElementById('error-msg');
+  errEl.classList.remove('visible');
+
+  if (!selectedPots) { showError('Please select number of pots first.'); return; }
+  const inputs = document.querySelectorAll('#names-grid .name-input');
+  const names = [...inputs].map(i => i.value.trim()).filter(Boolean);
+  if (names.length < slotCount) { showError(`Please fill all ${slotCount} slots.`); return; }
+
+  editablePots = buildDefaultPots(selectedPots);
+  renderPotPreview();
+  showScreen('screen-pot-preview');
+}
+
+let dragSrc = null; // { potIdx, teamName }
+
+function renderPotPreview() {
+  const container = document.getElementById('pots-columns');
+  container.innerHTML = '';
+
+  // Grid columns: 2 for 4-pot, otherwise auto
+  const cols = selectedPots === 4 ? 2 : selectedPots === 3 ? 3 : 2;
+  container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+  editablePots.forEach((potTeams, pi) => {
+    const col = document.createElement('div');
+    col.className = 'pot-col';
+    col.dataset.pot = pi;
+
+    const lbl = document.createElement('div');
+    lbl.className = 'pot-col-label';
+    lbl.textContent = `Pot ${pi + 1} (${potTeams.length} teams)`;
+    col.appendChild(lbl);
+
+    const grid = document.createElement('div');
+    grid.className = 'pot-teams-grid';
+
+    potTeams.forEach(team => {
+      const chip = document.createElement('div');
+      chip.className = 'team-chip';
+      chip.innerHTML = `<span class="chip-name">${flagImg(team, 11)}${team}</span><span class="chip-tag">[${teamTag(team)}]</span>`;
+      chip.draggable = true;
+      chip.dataset.pot = pi;
+      chip.dataset.team = team;
+
+      chip.addEventListener('dragstart', e => {
+        dragSrc = { potIdx: pi, team };
+        chip.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      chip.addEventListener('dragend', () => {
+        chip.classList.remove('dragging');
+        document.querySelectorAll('.team-chip').forEach(c => c.classList.remove('drag-over'));
+      });
+      chip.addEventListener('dragover', e => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        chip.classList.add('drag-over');
+      });
+      chip.addEventListener('dragleave', () => chip.classList.remove('drag-over'));
+      chip.addEventListener('drop', e => {
+        e.preventDefault();
+        chip.classList.remove('drag-over');
+        if (!dragSrc) return;
+        const destPot = pi;
+        const destTeam = team;
+        if (dragSrc.potIdx === destPot && dragSrc.team === destTeam) return;
+        // Swap the two teams between pots
+        const srcPotIdx = dragSrc.potIdx;
+        const srcTeam = dragSrc.team;
+        const srcIdx = editablePots[srcPotIdx].indexOf(srcTeam);
+        const destIdx = editablePots[destPot].indexOf(destTeam);
+        editablePots[srcPotIdx][srcIdx] = destTeam;
+        editablePots[destPot][destIdx] = srcTeam;
+        dragSrc = null;
+        renderPotPreview();
+      });
+
+      grid.appendChild(chip);
+    });
+
+    col.appendChild(grid);
+    container.appendChild(col);
+  });
+}
+
+// ============================================================
+// DRAW & REVEAL
+// ============================================================
+function startDraw() {
+  const inputs = document.querySelectorAll('#names-grid .name-input');
+  const names = [...inputs].map(i => i.value.trim()).filter(Boolean);
+  drawResult = assignTeams(names, editablePots);
+  revealPhase = 0;
+  document.getElementById('main-container').classList.add('draw-mode');
+  showScreen('screen-reveal');
+  startCountdown(() => showRevealPhase(0));
+}
+
+function startCountdown(cb) {
+  const content = document.getElementById('reveal-content');
+  document.getElementById('btn-next').classList.remove('visible');
+  document.getElementById('reveal-title').textContent = 'Get Ready…';
+  document.getElementById('reveal-subtitle').textContent = '';
+  document.getElementById('reveal-progress').textContent = '';
+  document.getElementById('progress-fill').style.width = '0%';
+
+  let count = 5;
+  content.innerHTML = `<div class="countdown-overlay">
+    <span class="countdown-number" id="cd-num">${count}</span>
+    <div class="countdown-label">Drawing begins in…</div>
+  </div>`;
+
+  const iv = setInterval(() => {
+    count--;
+    const el = document.getElementById('cd-num');
+    if (el) {
+      if (count > 0) {
+        el.textContent = count;
+      } else {
+        clearInterval(iv);
+        cb();
+      }
+    } else {
+      clearInterval(iv);
+    }
+  }, 1000);
+}
+
+function showRevealPhase(phaseIdx) {
+  revealPhase = phaseIdx;
+  const totalPhases = selectedPots;
+  const potLabel = ['1st','2nd','3rd','4th'][phaseIdx] || `${phaseIdx+1}th`;
+  document.getElementById('reveal-title').textContent = `Drawing Pot ${phaseIdx + 1}…`;
+  document.getElementById('reveal-subtitle').textContent = `Revealing each participant's ${potLabel} team`;
+
+  const content = document.getElementById('reveal-content');
+  content.innerHTML = '';
+
+  const list = document.createElement('div');
+  list.className = 'reveal-list';
+  // Two columns for 24 people
+  if (drawResult.length >= 20) list.classList.add('two-col');
+  content.appendChild(list);
+
+  const basePad = '0.6rem 0.6rem'
+  const baseFontName = '1.1rem'
+  const baseFontTeam = '1.1rem'
+
+  let i = 0;
+  const total = drawResult.length;
+
+  function revealNext() {
+    if (i >= total) {
+      const pct = ((phaseIdx + 1) / totalPhases) * 100;
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('reveal-progress').textContent = `${phaseIdx + 1} of ${totalPhases} pots drawn`;
+
+      const btn = document.getElementById('btn-next');
+      btn.textContent = phaseIdx + 1 < totalPhases ? `Draw Pot ${phaseIdx + 2} →` : 'See Final Results 🏆';
+      btn.classList.add('visible');
+      return;
+    }
+    const row = document.createElement('div');
+    row.className = 'reveal-row';
+    row.style.padding = basePad;
+    const teamStr = drawResult[i].teams[phaseIdx];
+    const tag = teamTag(teamStr);
+    row.innerHTML = `
+      <span class="reveal-name" style="font-size:${baseFontName}">${drawResult[i].name}</span>
+      <span class="reveal-arrow">→</span>
+      <span class="reveal-team" style="font-size:${baseFontTeam};display:flex;align-items:center;gap:6px">${flagImg(teamStr, 15)}${teamStr} [${tag}]</span>
+    `;
+    list.appendChild(row);
+    requestAnimationFrame(() => requestAnimationFrame(() => row.classList.add('show')));
+    i++;
+    document.getElementById('reveal-progress').textContent = `${i} of ${total} drawn…`;
+    setTimeout(revealNext, 5000);
+  }
+
+  setTimeout(revealNext, 5000);
+}
+
+function nextPhase() {
+  const btn = document.getElementById('btn-next');
+  btn.classList.remove('visible');
+
+  if (revealPhase + 1 < selectedPots) {
+    // Start countdown for next pot
+    startCountdown(() => showRevealPhase(revealPhase + 1));
+  } else {
+    showResults();
+  }
+}
+
+// ============================================================
+// RESULTS
+// ============================================================
+function showResults() {
+  launchConfetti();
+  document.getElementById('main-container').classList.remove('draw-mode');
+  showScreen('screen-results');
+
+  document.getElementById('results-subtitle').textContent =
+    `${drawResult.length} participants · ${selectedPots} pot${selectedPots>1?'s':''} each`;
+
+  const grid = document.getElementById('results-grid');
+  grid.innerHTML = '';
+
+  // Determine grid columns: 4 for <=12, 4 for 16, maybe 4 for 24
+  const n = drawResult.length;
+  const cols = n === 24 ? 4 : n === 16 ? 4 : 4; // always 4
+  const rows = Math.ceil(n / cols);
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+  drawResult.forEach(({ name, teams }) => {
+    const card = document.createElement('div');
+    card.className = 'result-card';
+
+    const nameEl = document.createElement('div');
+    nameEl.className = 'result-card-name';
+    nameEl.textContent = name;
+    card.appendChild(nameEl);
+
+    const teamsEl = document.createElement('div');
+    teamsEl.className = 'result-card-teams';
+
+    teams.forEach((team, pi) => {
+      const tag = teamTag(team);
+      const row = document.createElement('div');
+      row.className = 'result-team-row';
+      row.innerHTML = `
+        <span style="display:flex;align-items:center;gap:6px">${flagImg(team, 13)}<span class="result-team-name">${team} [${tag}]</span></span>
+      `;
+      teamsEl.appendChild(row);
+    });
+
+    card.appendChild(teamsEl);
+    grid.appendChild(card);
+  });
+}
+
+// ============================================================
+// CONFETTI
+// ============================================================
+function launchConfetti() {
+  const colors = ['#C9962A','#F0C86A','#ffffff','#1a5c2a','#e8e3d8'];
+  for (let i = 0; i < 80; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.width = (Math.random() * 6 + 5) + 'px';
+      el.style.height = (Math.random() * 6 + 5) + 'px';
+      el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      el.style.animationDelay = '0s';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }, i * 40);
+  }
+}
+
+// ============================================================
+// SCREEN MANAGEMENT
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() {
+  selectedPots = 0;
+  slotCount = 0;
+  drawResult = [];
+  revealPhase = 0;
+  editablePots = [];
+  document.getElementById('main-container').classList.remove('draw-mode');
+  document.querySelectorAll('.pot-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('pot-info').classList.remove('visible');
+  document.getElementById('names-grid').innerHTML = '';
+  document.getElementById('participants-label').textContent = 'Participants — select pots first';
+  document.getElementById('names-note').textContent = '';
+  document.getElementById('btn-start').disabled = true;
+  showScreen('screen-setup');
+}
+</script>
+</body>
+</html>
