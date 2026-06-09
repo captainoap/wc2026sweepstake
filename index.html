@@ -330,10 +330,10 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 4px;
-	max-width: 300px;
-	margin: 0 auto;
+    width: 300px;
+    margin: 0 auto;
   }
-  .reveal-list.two-col { grid-template-columns: 1fr 1fr; max-width: 600px; margin: 0 auto; }
+  .reveal-list.two-col { grid-template-columns: 1fr 1fr; width: 600px; margin: 0 auto; }
 
   .reveal-row {
     display: flex; align-items: center; gap: 4px;
@@ -341,7 +341,9 @@
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 8px;
     padding: 0.1rem 0.6rem;
-	line-height: 0.8;
+    line-height: 1.4;
+    overflow: hidden;
+    min-width: 0;
     opacity: 0; transform: translateX(-12px);
     transition: opacity 0.3s ease, transform 0.3s ease;
   }
@@ -353,6 +355,7 @@
     font-family: 'Bebas Neue', sans-serif;
     font-size: 0.95rem; letter-spacing: 0.08em;
     color: var(--gold-light); flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .btn-next-phase {
@@ -384,7 +387,8 @@
   .results-grid {
     display: grid;
     gap: 10px;
-    margin-bottom: 1.5rem;
+    margin: 0 auto 1.5rem;
+    width: fit-content;
   }
 
   .result-card {
@@ -393,6 +397,7 @@
     border-radius: 10px;
     padding: 0.75rem 0.9rem;
     transition: background 0.2s;
+    width: 200px;
   }
   .result-card:hover { background: rgba(255,255,255,0.08); }
   .result-card-name {
@@ -445,8 +450,47 @@
     100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
   }
 
+  /* ===== DRAW OPTIONS ===== */
+  .draw-options {
+    margin-top: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .draw-option-group {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+  }
+  .draw-option-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .draw-option-radio {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    padding: 0.2rem 0;
+  }
+  .draw-option-radio input[type="radio"] {
+    accent-color: var(--gold);
+    cursor: pointer;
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+  }
+  .draw-option-radio:hover { color: var(--white); }
+
   @media (max-width: 500px) {
     .names-grid { grid-template-columns: 1fr 1fr; }
+    .draw-options { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -467,13 +511,13 @@
       <div class="section-label">Number of pots</div>
       <div class="pot-selector">
         <button class="pot-btn" data-pots="2" onclick="selectPots(2)">
-          <strong>2</strong> Pots · 24 people
+          <strong>2 Pots</strong> 24 people
         </button>
         <button class="pot-btn" data-pots="3" onclick="selectPots(3)">
-          <strong>3</strong> Pots · 16 people
+          <strong>3 Pots</strong> 16 people
         </button>
         <button class="pot-btn" data-pots="4" onclick="selectPots(4)">
-          <strong>4</strong> Pots · 12 people
+          <strong>4 Pots</strong> 12 people
         </button>
       </div>
       <div class="pot-info" id="pot-info"></div>
@@ -484,6 +528,36 @@
 
       <p class="error-msg" id="error-msg"></p>
       <button class="btn-start" id="btn-start" onclick="goToPotPreview()" disabled>Review Pots &amp; Begin</button>
+
+      <div class="draw-options" id="draw-options">
+        <div class="draw-option-group">
+          <div class="draw-option-label">Pot draw order</div>
+          <label class="draw-option-radio">
+            <input type="radio" name="opt-order" value="reverse" checked> Reverse (Last pot → First)
+          </label>
+          <label class="draw-option-radio">
+            <input type="radio" name="opt-order" value="forward"> In order (First pot → Last)
+          </label>
+        </div>
+        <div class="draw-option-group">
+          <div class="draw-option-label">Same group rule</div>
+          <label class="draw-option-radio">
+            <input type="radio" name="opt-samegroup" value="disallow" checked> No same groups allowed
+          </label>
+          <label class="draw-option-radio">
+            <input type="radio" name="opt-samegroup" value="allow"> Same groups allowed
+          </label>
+        </div>
+        <div class="draw-option-group">
+          <div class="draw-option-label">Reveal style</div>
+          <label class="draw-option-radio">
+            <input type="radio" name="opt-reveal" value="pots" checked> Draw pot by pot
+          </label>
+          <label class="draw-option-radio">
+            <input type="radio" name="opt-reveal" value="table"> Skip to final table
+          </label>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -571,7 +645,7 @@ function flagImg(team, height) {
 
 const POT_INFO = {
   2: '[DEFAULT SORTING] Pot 1: 1st & 2nd from each group ·  Pot 2: 3rd & 4th from each group',
-  3: '[DEFAULT SORTING] Pot 1: 1st team from each group + 2nd team from groups A-D ·  Pot 2: Remaining 2nd teams + 3rd team from groups A-H  ·  Pot 3: Remaining teams',
+  3: '[DEFAULT SORTING] Pot 1: 16 best teams by odds (then FIFA rankings for tie breakers) ·  Pot 2: Middle 16 teams  ·  Pot 3: Worst 16 teams',
   4: '[DEFAULT SORTING] Pot 1: 1st from each group  ·  Pot 2: 2nd from each group ·  Pot 3: 3rd from each group  ·  Pot 4: 4th from each group'
 };
 
@@ -585,6 +659,11 @@ let slotCount = 0;
 let drawResult = [];
 let revealPhase = 0;
 let editablePots = []; // Array of arrays, mutable after preview
+let drawOptions = {
+  reverseOrder: true,      // default: draw pot 3 first
+  allowSameGroup: false,   // default: no same group
+  skipReveal: false        // default: draw pot by pot
+};
 
 // ============================================================
 // UTILITY
@@ -631,19 +710,18 @@ function buildDefaultPots(numPots) {
   }
 }
 
-// Assign teams from (already-ordered) pots to names, resolving same-group conflicts
-function assignTeams(names, pots) {
+// Attempt one assignment pass; returns result array (may still have conflicts)
+function attemptAssign(names, pots) {
   const shuffled = pots.map(p => shuffle([...p]));
   const n = names.length;
   const numPots = pots.length;
-
   const assignments = Array.from({length: n}, () => []);
 
   for (let pi = 0; pi < numPots; pi++) {
     const pool = shuffled[pi].slice(0, n);
     for (let i = 0; i < n; i++) assignments[i][pi] = pool[i];
 
-    // Resolve same-group conflicts
+    if (!drawOptions.allowSameGroup) {
     for (let i = 0; i < n; i++) {
       for (let prevPot = 0; prevPot < pi; prevPot++) {
         if (sameGroup(assignments[i][pi], assignments[i][prevPot])) {
@@ -667,9 +745,28 @@ function assignTeams(names, pots) {
         }
       }
     }
+    }
   }
 
   return names.map((name, i) => ({ name, teams: assignments[i] }));
+}
+
+function hasGroupConflicts(result) {
+  return result.some(({ teams }) =>
+    teams.some((t1, i) => teams.some((t2, j) => i !== j && sameGroup(t1, t2)))
+  );
+}
+
+// Assign teams, retrying until no same-group conflicts (unless allowSameGroup is set)
+function assignTeams(names, pots) {
+  if (drawOptions.allowSameGroup) {
+    return attemptAssign(names, pots);
+  }
+  let result;
+  do {
+    result = attemptAssign(names, pots);
+  } while (hasGroupConflicts(result));
+  return result;
 }
 
 // ============================================================
@@ -815,11 +912,25 @@ function renderPotPreview() {
 function startDraw() {
   const inputs = document.querySelectorAll('#names-grid .name-input');
   const names = [...inputs].map(i => i.value.trim()).filter(Boolean);
-  drawResult = assignTeams(names, editablePots);
+
+  // Read draw options from radio buttons
+  drawOptions.reverseOrder = document.querySelector('input[name="opt-order"]:checked').value === 'reverse';
+  drawOptions.allowSameGroup = document.querySelector('input[name="opt-samegroup"]:checked').value === 'allow';
+  drawOptions.skipReveal = document.querySelector('input[name="opt-reveal"]:checked').value === 'table';
+
+  // Build pots in draw order
+  const potsInDrawOrder = drawOptions.reverseOrder ? [...editablePots].reverse() : [...editablePots];
+  drawResult = assignTeams(names, potsInDrawOrder);
+
   revealPhase = 0;
   document.getElementById('main-container').classList.add('draw-mode');
-  showScreen('screen-reveal');
-  startCountdown(() => showRevealPhase(0));
+
+  if (drawOptions.skipReveal) {
+    showResults();
+  } else {
+    showScreen('screen-reveal');
+    startCountdown(() => showRevealPhase(0));
+  }
 }
 
 function startCountdown(cb) {
@@ -855,8 +966,9 @@ function startCountdown(cb) {
 function showRevealPhase(phaseIdx) {
   revealPhase = phaseIdx;
   const totalPhases = selectedPots;
+  const actualPotNum = drawOptions.reverseOrder ? selectedPots - phaseIdx : phaseIdx + 1;
   const potLabel = ['1st','2nd','3rd','4th'][phaseIdx] || `${phaseIdx+1}th`;
-  document.getElementById('reveal-title').textContent = `Drawing Pot ${phaseIdx + 1}…`;
+  document.getElementById('reveal-title').textContent = `Drawing Pot ${actualPotNum}…`;
   document.getElementById('reveal-subtitle').textContent = `Revealing each participant's ${potLabel} team`;
 
   const content = document.getElementById('reveal-content');
@@ -868,9 +980,10 @@ function showRevealPhase(phaseIdx) {
   if (drawResult.length >= 20) list.classList.add('two-col');
   content.appendChild(list);
 
-  const basePad = '0.6rem 0.6rem'
-  const baseFontName = '1.1rem'
-  const baseFontTeam = '1.1rem'
+  const basePad = '0.1rem 0.6rem';
+  const hasLongName = drawResult.some(r => r.name.length > 10);
+  const baseFontName = hasLongName ? '0.7rem' : '1.1rem';
+  const baseFontTeam = '1.1rem';
 
   let i = 0;
   const total = drawResult.length;
@@ -927,7 +1040,7 @@ function showResults() {
   showScreen('screen-results');
 
   document.getElementById('results-subtitle').textContent =
-    `${drawResult.length} participants · ${selectedPots} pot${selectedPots>1?'s':''} each`;
+    `${drawResult.length} participants · ${selectedPots} team${selectedPots>1?'s':''} each`;
 
   const grid = document.getElementById('results-grid');
   grid.innerHTML = '';
@@ -950,7 +1063,10 @@ function showResults() {
     const teamsEl = document.createElement('div');
     teamsEl.className = 'result-card-teams';
 
-    teams.forEach((team, pi) => {
+    // Always display teams in pot 1, 2, 3... order regardless of draw order
+    const sortedTeams = drawOptions.reverseOrder ? [...teams].reverse() : teams;
+
+    sortedTeams.forEach((team) => {
       const tag = teamTag(team);
       const row = document.createElement('div');
       row.className = 'result-team-row';
@@ -1008,6 +1124,9 @@ function restart() {
   document.getElementById('participants-label').textContent = 'Participants — select pots first';
   document.getElementById('names-note').textContent = '';
   document.getElementById('btn-start').disabled = true;
+  document.querySelector('input[name="opt-order"][value="reverse"]').checked = true;
+  document.querySelector('input[name="opt-samegroup"][value="disallow"]').checked = true;
+  document.querySelector('input[name="opt-reveal"][value="pots"]').checked = true;
   showScreen('screen-setup');
 }
 </script>
